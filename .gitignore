@@ -1,6 +1,6 @@
 /*
 !.gitignore
 !README.md
-!gifdec.hpp
-!gifdec.cpp
+!GIFDecode.hpp
+!GIFDecode.cpp
 !lib/
