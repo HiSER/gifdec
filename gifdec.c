@@ -243,12 +243,18 @@ new_table(int key_size)
     int key;
     int init_bulk = MAX(1 << (key_size + 1), 0x100);
     Table *table = malloc(sizeof(*table) + sizeof(Entry) * init_bulk);
-    if (table) {
-        table->bulk = init_bulk;
-        table->nentries = (1 << key_size) + 2;
-        table->entries = (Entry *) &table[1];
-        for (key = 0; key < (1 << key_size); key++)
-            table->entries[key] = (Entry) {1, 0xFFF, key};
+	if (table) {
+		table->bulk = init_bulk;
+		table->nentries = (1 << key_size) + 2;
+		table->entries = (Entry *)&table[1];
+		for (key = 0; key < (1 << key_size); key++)
+		{
+			/* fixed MSVC C2059 */
+			Entry* entry = &table->entries[key]; /* = (Entry) { 1, 0xFFF, key }; */
+			entry->length = 1;
+			entry->prefix = 0xFFF;
+			entry->suffix = key;
+		}
     }
     return table;
 }
@@ -260,6 +266,7 @@ new_table(int key_size)
 static int
 add_entry(Table **tablep, uint16_t length, uint16_t prefix, uint8_t suffix)
 {
+	Entry* entry;
     Table *table = *tablep;
     if (table->nentries == table->bulk) {
         table->bulk *= 2;
@@ -268,7 +275,11 @@ add_entry(Table **tablep, uint16_t length, uint16_t prefix, uint8_t suffix)
         table->entries = (Entry *) &table[1];
         *tablep = table;
     }
-    table->entries[table->nentries] = (Entry) {length, prefix, suffix};
+	/* fixed MSVC C2059 */
+	entry = &table->entries[table->nentries]; /* = (Entry) { length, prefix, suffix }; */
+	entry->length = length;
+	entry->prefix = prefix;
+	entry->suffix = suffix;
     table->nentries++;
     if ((table->nentries & (table->nentries - 1)) == 0)
         return 1;
