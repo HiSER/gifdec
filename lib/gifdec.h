@@ -3,6 +3,11 @@
 
 #include <stdint.h>
 #include <sys/types.h>
+#include "Config.h"
+
+#ifndef TRACE_ERROR
+#define TRACE_ERROR(fmt, ...) fprintf(stderr, fmt "\n", __VA_ARGS__)
+#endif
 
 #ifdef __cplusplus
 extern "C" {

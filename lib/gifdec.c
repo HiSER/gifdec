@@ -57,13 +57,15 @@ gd_open_gif(const char *fname)
     /* Header */
     read(fd, sigver, 3);
     if (memcmp(sigver, "GIF", 3) != 0) {
-        fprintf(stderr, "invalid signature\n");
+        /* fprintf(stderr, "invalid signature\n"); */
+		TRACE_ERROR("gifdec: invalid signature");
         goto fail;
     }
     /* Version */
     read(fd, sigver, 3);
     if (memcmp(sigver, "89a", 3) != 0) {
-        fprintf(stderr, "invalid version\n");
+        /* fprintf(stderr, "invalid version\n"); */
+		TRACE_ERROR("gifdec: invalid version");
         goto fail;
     }
     /* Width x Height */
@@ -73,7 +75,8 @@ gd_open_gif(const char *fname)
     read(fd, &fdsz, 1);
     /* Presence of GCT */
     if (!(fdsz & 0x80)) {
-        fprintf(stderr, "no global color table\n");
+        /* fprintf(stderr, "no global color table\n"); */
+		TRACE_ERROR("gifdec: no global color table");
         goto fail;
     }
     /* Color Space's Depth */
@@ -233,7 +236,8 @@ read_ext(gd_GIF *gif)
         read_application_ext(gif);
         break;
     default:
-        fprintf(stderr, "unknown extension: %02X\n", label);
+        /* fprintf(stderr, "unknown extension: %02X\n", label); */
+		TRACE_ERROR("gifdec: unknown extension: %02X", label);
     }
 }
 
