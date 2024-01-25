@@ -28,18 +28,24 @@ public:
 	int getNextDelay();
 
 #ifdef _MSC_VER
-	void drawFrame(HDC hdc, int x = 0, int y = 0);
+	void start(HDC hdc, int x = 0, int y = 0);
+	void release();
+	void draw();
 #else
 	// TODO: other platforms
 #endif
 
 #ifdef _MSC_VER
 #include <pshpack1.h>
-	typedef struct
+	typedef union
 	{
-		uint8_t blue;
-		uint8_t green;
-		uint8_t red;
+		uint8_t raw[3];
+		struct
+		{
+			uint8_t blue;
+			uint8_t green;
+			uint8_t red;
+		} rgb;
 	} tRGB;
 	typedef struct
 	{
@@ -80,8 +86,16 @@ private:
 	eFrameStatus frame_status;
 
 #ifdef _MSC_VER
-	BITMAPINFO bmp_info;
 	DWORD tick;
+	HBITMAP bg_bmp;
+	HGDIOBJ old_bg_bmp;
+	HBITMAP anim_bmp;
+	HGDIOBJ old_anim_bmp;
+	HDC main_dc;
+	HDC bg_dc;
+	HDC anim_dc;
+	tRGBA* bmp_bits;
+	int main_x, main_y;
 #endif
 
 };

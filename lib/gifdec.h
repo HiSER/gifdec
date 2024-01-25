@@ -3,8 +3,10 @@
 
 #include <stdint.h>
 #include <sys/types.h>
-#include "Config.h"
 
+#ifdef USE_CONFIG_H
+#include "Config.h"
+#endif
 #ifndef TRACE_ERROR
 #define TRACE_ERROR(fmt, ...) fprintf(stderr, fmt "\n", __VA_ARGS__)
 #endif

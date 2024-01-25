@@ -3,31 +3,23 @@
 https://github.com/lecram/gifdec
 ```
 
-### MSVC Example
+### MSVC WinCE Example
 ```c++
 void drawGIF(const char* filename)
 {
     auto gif = new GIFDecode(filename);
     if (!gif) return;
-
-    HDC dc = CreateCompatibleDC(hdc);
-    HBITMAP bmp = CreateCompatibleBitmap(hdc, gif->getWidth(), gif->getHeight());
-    HGDIOBJ old_bmp = SelectObject(dc, bmp);
-
+    gif->start(hdc, 100, 100);
     do
     {
         if (gif->isEOF()) gif->rewind();
         while (!stopped && gif->getFrame())
         {
-            gif->drawFrame(dc);
-            BitBlt(hdc, 0, 0, gif->getWidth(), gif->getHeight(), dc, 0, 0, SRCCOPY);
+            gif->draw();
             Sleep(gif->getNextDelay());
         }
     } while (!stopped && gif->isEOF());
-
-    SelectObject(dc, old_bmp);
-    DeleteObject(bmp);
-    DeleteObject(dc);
+    gif->release();
     delete gif;
 }
 ```
