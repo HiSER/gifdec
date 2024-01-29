@@ -15,7 +15,7 @@ public:
 	explicit GIFDecode(const char* filename);
 	~GIFDecode();
 
-	operator bool() { return gif != nullptr; }
+	bool isLoaded() { return gif != nullptr; }
 
 	int getWidth() { return gif->width; }
 	int getHeight() { return gif->height; }
@@ -28,6 +28,7 @@ public:
 	int getNextDelay();
 
 #ifdef _MSC_VER
+    bool isStarted() { return main_dc != nullptr; }
 	void start(HDC hdc, int x = 0, int y = 0);
 	void release();
 	void draw();

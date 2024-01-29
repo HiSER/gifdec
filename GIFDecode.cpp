@@ -6,7 +6,7 @@ GIFDecode::GIFDecode(const char* filename)
 	main_dc = nullptr;
 #endif
 	gif = gd_open_gif(filename);
-	if (!this)
+    if (!isLoaded())
 	{
 		TRACE_ERROR("GIFDecode: open '%s' error", filename);
 		return;
@@ -31,7 +31,7 @@ GIFDecode::GIFDecode(const char* filename)
 
 GIFDecode::~GIFDecode()
 {
-	if (this)
+	if (isLoaded())
 	{
 #ifdef _MSC_VER
 		release();
@@ -80,7 +80,7 @@ void GIFDecode::start(HDC hdc, int x, int y)
 
 void GIFDecode::release()
 {
-	if (main_dc != nullptr)
+	if (isStarted())
 	{
 		BitBlt(main_dc, main_x, main_y, getWidth(), getHeight(), bg_dc, 0, 0, SRCCOPY);
 		SelectObject(anim_dc, old_anim_bmp);
